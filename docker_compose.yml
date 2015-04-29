@@ -1,0 +1,1 @@
+docker run -it --rm -v `pwd`:/new_site -p 8080:80 k1xme/new_site bash

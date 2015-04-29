@@ -1,0 +1,17 @@
+#box-cs * { padding: 0; margin: 0; font-size: 12px; }
+#box-cs ul { list-style: none; }
+#box-cs a { text-decoration: none; }
+#box-cs { position: fixed; right: 0; top: 20%; z-index: 100; _position: absolute; _top: expression(eval(document.documentElement.scrollTop+100)); }
+#box-cs .cs-open { position: absolute; top: 0; right: 0; width: 138px; padding: 46px 0 0 0; background: url(../img/cs/cs_icon.png) no-repeat -46px 0; _background-image: url(../img/cs/cs_icon.gif); overflow: hidden; }
+#box-cs .cs-open .close{ display: block; position: absolute; width: 22px; height: 22px; right: 0; top: 0; text-indent: -9999px; }
+#box-cs .cs-open div { padding-bottom: 5px; background: url(../img/cs/cs_bg.png) no-repeat -268px bottom; width: 134px; }
+#box-cs .cs-open ul { background: url(../img/cs/cs_bg.png) repeat-y 0 0 #939393; }
+#box-cs .cs-open li { height: 40px; line-height: 40px; padding: 0 15px 2px; background: url(../img/cs/cs_bg.png) no-repeat -134px bottom; }
+#box-cs .cs-open li a { color: #fff; display: block; position: relative; zoom: 1; padding-left: 35px; height: 16px; }
+#box-cs .cs-open li a:hover { text-decoration: none; }`
+#box-cs .cs-open li p { color: #fff; position: relative; zoom: 1; height: 16px; text-align: center;}
+#box-cs .cs-open li a i { display: inline-block; position: absolute; left: 10px; top: 6px; width: 21px; height: 21px; background: url(../img/cs/cs_icon.png) no-repeat 9999px 9999px; _background-image: url(../img/cs/cs_icon.gif); }
+#box-cs .cs-open li a i.qq { background-position: -86px -56px; }
+#box-cs .cs-open li a i.online { background-position: -56px -56px; }
+#box-cs .cs-open li a i.txt { background-position: -56px -86px; }
+#box-cs .cs-close { position: absolute; top: 5px; right: 0; width: 0; height: 127px; padding: 0; background: url(../img/cs/cs_icon.png) no-repeat 0 0; _background-image: url(../img/cs/cs_icon.gif); cursor: pointer; overflow: hidden; }```
