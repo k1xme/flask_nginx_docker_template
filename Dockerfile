@@ -9,6 +9,7 @@ RUN pip install flask
 RUN pip install paypalrestsdk
 RUN pip install gunicorn
 
+# For deploying to PaaS
 RUN git clone https://github.com/k1xme/flask_nginx_docker_template.git /new_site
 
 ENV PAYMENT_SERVER_PORT 4567
@@ -25,7 +26,7 @@ EXPOSE 80 443
 WORKDIR /new_site
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY flask_paypal_com.conf /etc/nginx/sites-enabled/flask_paypal_com.conf
+COPY flask_paypal_com.conf /etc/nginx/sites-enabled/default
 
 #ENTRYPOINT gunicorn -w $GUNICORN_WORKER -b $GUNICORN_ADDRESS payment_server:app
 
