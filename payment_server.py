@@ -1,23 +1,29 @@
 import os
 import re
-from flask import Flask,redirect, request
+from flask import Flask,redirect, request, session, url_for
 import paypalrestsdk
 
 # Initialized Paypal RESTful client.
-PAYPAL_CLIENT_ID = 'AQkquBDf1zctJOWGKWUEtKXm6qVhueUEMvXO_-MCI4DQQ4-LWvkDLIN2fGsd'
-PAYPAL_CLIENT_SECRET = 'EL1tVxAjhT7cJimnz5-Nsx9k2reTKSVfErNQF-CmrwJgxRtylkGTKlU4RvrX'
-PAYPAL_MODE = os.environ.get('PAYPAL_MODE', 'sandbox')
-PAYPAL_RETURN_URL = "http://192.168.59.103:8080/approve-payment?success=true"
-PAYPAL_CANCEL_URL = "http://192.168.59.103:8080/approve-payment?success=false"
-PAYMENT_SERVER_SECRET_KEY = os.environ.get('PAYMENT_SERVER_SECRET_KEY', "doushidashabi")
-PAYMENT_SERVER_PORT = os.environ.get('PAYMENT_SERVER_PORT', 5000)
-ACCESS_CHECKING_URL = 'http://192.168.59.103:8080/check-code.html'
-CREATE_PAYMENT_URL = '/create-payment.html'
-CREATE_FAILED_URL = CREATE_PAYMENT_URL
+SANDBOX_CLIENT_ID = "AQkquBDf1zctJOWGKWUEtKXm6qVhueUEMvXO_-MCI4DQQ4-LWvkDLIN2fGsd"
+SANDBOX_CLIENT_SECRET = "EL1tVxAjhT7cJimnz5-Nsx9k2reTKSVfErNQF-CmrwJgxRtylkGTKlU4RvrX"
 
-PAYMENT_DESC = 'Recharge Fee'
-APPROVE_PAYMENT_FAILED_URL = "/success.html"
-APPROVE_PAYMENT_SUCCESS_URL = "/failure.html"
+# Paypal SDK related config.
+HOST_URL_BASE = os.environ.get("HOST_URL_BASE", "http://192.168.59.103")
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID", SANDBOX_CLIENT_ID)
+PAYPAL_CLIENT_SECRET = os.environ.get("PAYPAL_CLIENT_SECRET", SANDBOX_CLIENT_SECRET)
+PAYPAL_MODE = os.environ.get("PAYPAL_MODE", 'sandbox')
+PAYPAL_RETURN_URL = HOST_URL_BASE + "/approve-payment?success=true"
+PAYPAL_CANCEL_URL = HOST_URL_BASE + "/approve-payment?success=false"
+PAYMENT_SERVER_SECRET_KEY = os.environ.get('PAYMENT_SERVER_SECRET_KEY', "doushidashabi")
+PAYMENT_SERVER_PORT = os.environ.get("PAYMENT_SERVER_PORT", 5000)
+ACCESS_CHECKING_URL = HOST_URL_BASE + "/check-code.html"
+CREATE_PAYMENT_URL = HOST_URL_BASE + "/create-payment.html"
+CREATE_FAILED_URL = CREATE_PAYMENT_URL
+APPROVE_PAYMENT_FAILED_URL = HOST_URL_BASE + "/success.html"
+APPROVE_PAYMENT_SUCCESS_URL = HOST_URL_BASE + "/failure.html"
+
+# Misc Config
+PAYMENT_DESC = "Recharge Fee"
 ACCESS_CODE_PATTERN = r"k.{3}s.{3}"
 
 #-----------------------------------------------------------------------------
@@ -39,6 +45,7 @@ access_code_pattern = re.compile(ACCESS_CODE_PATTERN)
 # ROUTING RULES
 @app.route('/create-payment', methods=['POST', 'GET'])
 def create_payment():
+    # Access checking procedure.
     if PAYPAL_MODE != 'sandbox': 
         try:
             if not session['pass']:
@@ -49,6 +56,7 @@ def create_payment():
     if request.method == 'GET':
         return redirect(CREATE_PAYMENT_URL)
 
+    # Start to create payment.
     redirect_url = CREATE_FAILED_URL
 
     payment_amount = request.form['payment_amount']
@@ -101,19 +109,19 @@ def approve_payment():
     return redirect(APPROVE_PAYMENT_FAILED_URL)
 
 
-@app.route('/check-access', methods=['POST'])
+@app.route("/check-access", methods=['POST'])
 def check_access():
     # add hash token to session
-    crc = request.form['crc']
+    crc = request.form["crc"]
 
     rst = re.match(access_code_pattern, crc)
     
     if not rst:
         return redirect(ACCESS_CHECKING_URL)
     
-    session['pass'] = True
+    session["pass"] = True
 
-    return redirect('/create-payment')
+    return redirect("/create-payment")
 
 #-----------------------------------------------------------------------------
 # Only for debugging
